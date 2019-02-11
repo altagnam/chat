@@ -60,6 +60,14 @@ public class UserService {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 	}
+	
+	/**
+	 * Remove um usuário  da base
+	 * @param user
+	 */
+	public void delete(User user) {
+		userRepository.delete(user);
+	}
 
 	/**
 	 * Retorna a lista de usuarios cadastrados 
