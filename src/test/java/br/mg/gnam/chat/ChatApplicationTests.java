@@ -23,15 +23,23 @@ public class ChatApplicationTests {
 
 	@Test
 	public void test1_save() {
-		System.out.println("\nSalvando um usuário no banco\n");
-		User user = new User();
-		user.setLogin("login");
-		user.setName("User name");
-		user.setPassword("123123");
-		user.setRole("USER");
-		user = userService.save(user);
-		System.out.println("\nUsuário salvo\n");
-		System.out.println(user.toString());
+
+		try {
+		
+			System.out.println("\nSalvando um usuário no banco\n");
+			User user = new User();
+			user.setLogin("login");
+			user.setName("User name");
+			user.setPassword("123123");
+			user.setRole("USER");
+			user = userService.save(user);
+			System.out.println("\nUsuário salvo\n");
+			System.out.println(user.toString());
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	

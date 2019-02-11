@@ -10,6 +10,14 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * <p>Classe de configuração para habilitar swagger.</p>
+ * <p>Esta classe permite ao sistema exibir a documetação dos web-services cadastradas no sistema.</p>
+ * 
+ * @author rafael.altagnam
+ * @since 10/02/2019
+ * @version 1.0
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
