@@ -8,6 +8,12 @@ function createUSer() {
 				div.innerText = 'Usuário criado com sucesso!';
 				div.className = 'alert alert-success';
 			}
+		}else if (this.readyState == 4 && this.status == 500){
+			var json = JSON.parse(this.responseText);
+			var div = document.getElementById('msg');
+			div.innerText = json.message;
+			div.className = 'alert alert-danger';
+			
 		}
 	};
 	xhttp.open("POST", "http://localhost:8080/user", true);
@@ -19,4 +25,14 @@ function createUSer() {
 	}));
 
 	return false;	
+}
+
+
+function loginErro(){
+	var url = window.location.href;
+	if (url.includes('erro')){
+		var div = document.getElementById('msg-login');
+		div.innerText = 'Usuário ou senha inválidos.';
+		div.className = 'alert alert-danger';
+	}
 }
