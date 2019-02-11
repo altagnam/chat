@@ -54,8 +54,13 @@ public class UserService {
 	 * 
 	 * @param user
 	 * @return
+	 * @throws Exception 
 	 */
-	public User save(User user) {
+	public User save(User user) throws Exception {
+		if (porLogin(user.getLogin()) != null) {
+			throw new Exception("Login já cadastrado. Informe um login diferente.");
+		}
+		
 		user.setRole(ROLE_USER);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
@@ -103,7 +108,8 @@ public class UserService {
 	 * @return
 	 */
 	public User porLogin(String login) {
-		return userRepository.findByLogin(login);
+		User user = userRepository.findByLogin(login);
+		return user;
 	}
 
 }
