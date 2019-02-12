@@ -4,6 +4,22 @@ var	path = window.location.host;
 var	url = protocol + '//' + path;
 
 /**
+ * Ativa o listener do textarea para verificar se o usuário pressionou a tecla ENTER.
+ * Se pressionar, a mensagem será enviada.
+ * @returns
+ */
+function activeListenerOnKeyUpTextArea(){
+	var textarea = document.getElementById("message");
+	textarea.addEventListener("keyup", function(event) {
+	  event.preventDefault();
+	  if (event.keyCode === 13) {
+	    document.getElementById("send").click();
+	  }
+	});
+}
+
+
+/**
  * Recupera todos os usuários cadastrados
  * @returns
  */
@@ -14,7 +30,16 @@ function getAllUser (){
 		var json = JSON.parse(xmlHttp.responseText);		
 		for(var k in json) {
 		   var user = json[k];
-		   $("#table_users").append('<tr style=\'cursor: pointer;\' onclick=\'startTalk(this)\'><td id=' + user.login + '>' + user.name + '<span style=\'float: right;\'></span><span style=\'float: right;  width: 20px; text-align: center;\'></span></td></tr>');
+		   var row = '<tr style=\'cursor: pointer;\' onclick=\'startTalk(this)\'>';
+		   row += '<td id=' + user.login + '>';
+		   row += user.name;
+		   if (user.status == 1){
+			   row += '<span class=\'text-success\' style=\'float: right; text-align: center;\'>on</span>';
+		   }else{
+			   row += '<span class=\'text-danger\' style=\'float: right; text-align: center;\'>off</span>';
+		   }
+		   row += '</td></tr>';
+		   $("#table_users").append(row);
 		}
 	}
 	xmlHttp.open("GET", url + '/user/all', true); // true for asynchronous 
@@ -60,7 +85,7 @@ function startTalk (row){
 	if (stompClient.connected){
 		$("#send").prop("disabled", false);
 	}else{
-		alert('Você não esta conectado');
+		alert('Você não está conectado.');
 	}
 }
 
@@ -243,6 +268,15 @@ function showMessage(message) {
  */
 function updateStatusUsers(message){
 	addRowMessage(message, true);
+	var rowUser = document.getElementById(message.login);
+	
+	if (message.status == 0){
+		rowUser.children[0].innerText = 'on';
+		rowUser.children[0].className = 'text-success';
+	}else{
+		rowUser.children[0].innerText = 'off';
+		rowUser.children[0].className = 'text-danger';
+	}
 }
 
 
