@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.mg.gnam.chat.model.User;
@@ -34,6 +35,6 @@ public interface UserRepository  extends JpaRepository<User, Long>  {
 	 * @return
 	 */
 	@Query(value = "SELECT u FROM User u WHERE u != :user ORDER BY u.name")
-	public List<User> findAllLess(User user);
+	public List<User> findAllLess(@Param(value = "user") User user);
 
 }

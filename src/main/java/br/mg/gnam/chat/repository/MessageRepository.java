@@ -19,7 +19,7 @@ public interface MessageRepository  extends JpaRepository<Message, Long>  {
 	
 	public List<Message> findByFromAndTo(User from, User to);
 	
-	@Query(value = "SELECT U.CPF, COUNT(*) FROM MESSAGE M INNER JOIN USER U ON (U.ID = M.USER_FROM) WHERE M.USER_TO = ?1 GROUP BY USER_FROM", nativeQuery = true)
+	@Query(value = "SELECT U.LOGIN, COUNT(*) FROM MESSAGE M INNER JOIN USER U ON (U.ID = M.USER_FROM) WHERE M.USER_TO = ?1 GROUP BY USER_FROM", nativeQuery = true)
 	public List<Object[]> countMessages (Long idUser);	
 	
 	public List<Message> removeByTo(User user);

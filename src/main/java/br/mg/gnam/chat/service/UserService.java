@@ -10,26 +10,44 @@ import org.springframework.stereotype.Service;
 import br.mg.gnam.chat.model.User;
 import br.mg.gnam.chat.repository.UserRepository;
 
+/**
+ * <p>Serviço responsável por manipular as informações dos usuários cadastrados no sistema.</p> 
+ * @author rafael.altagnam
+ * @since 06/02/2019
+ * @version 1.0
+ */
 @Service
 public class UserService {
 
+	/**
+	 * ROLE padrão para todos os usuários
+	 */
 	private static final String ROLE_USER = "USER";
-
+	
+	/**
+	 * Repositorio de dados do usuário
+	 */
 	@Autowired
 	private UserRepository userRepository;
 
+	/**
+	 * Bean responsável pela criptografia da senha
+	 */
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	
+	/**
+	 * Cache com os usuários conectados no websocket
+	 */
 	private HashMap<String, Boolean> usersConnectedChat = new  HashMap<String, Boolean>();
+	
 	
 	/**
 	 * Verifica se um determinado login esta conectado ao chat
 	 * @param login
 	 * @return
 	 */
-	public boolean isUserOn(String login) {
+	public boolean isUserOnWebSocket(String login) {
 		return usersConnectedChat.containsKey(login);
 	}	
 	
@@ -37,7 +55,7 @@ public class UserService {
 	 * Indica que um determinado login esta conectado ao chat 
 	 * @param login
 	 */
-	public void userOn(String login) {
+	public void userOnWebSocket(String login) {
 		usersConnectedChat.put(login, true);
 	}
 	
@@ -45,7 +63,7 @@ public class UserService {
 	 * Indica que um determinado login nao esta conectado ao chat
 	 * @param login
 	 */
-	public void userOff(String login) {
+	public void userOffWebSocket(String login) {
 		usersConnectedChat.remove(login);
 	}	
 
@@ -57,8 +75,14 @@ public class UserService {
 	 * @throws Exception 
 	 */
 	public User save(User user) throws Exception {
+		user.validate();
+		
 		if (porLogin(user.getLogin()) != null) {
 			throw new Exception("Login já cadastrado. Informe um login diferente.");
+		}
+		
+		if (porNome(user.getName()) != null) {
+			throw new Exception("Nome já cadastrado. Informe um nome diferente.");
 		}
 		
 		user.setRole(ROLE_USER);

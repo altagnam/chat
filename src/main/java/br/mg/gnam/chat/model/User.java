@@ -1,31 +1,71 @@
 package br.mg.gnam.chat.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.springframework.util.StringUtils;
+
+/**
+ * <p>Entidade responsável por armazenar os dados referente aos usuários cadastrados  no sistema.</p> 
+ * @author rafael.altagnam
+ * @since 07/02/2019
+ * @version 1.0
+ */
 @Entity
 @Table(name = "USER")
 public class User {
 
+	/**
+	 * ID da entidade
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	/**
+	 * Nome do usuário
+	 */
+	@Column(nullable = false)
 	private String name;
 
+	/**
+	 * Login para que o usário possa se conectar a aplicação.
+	 */
+	@Column(unique = true, nullable = false)
+	@NotNull
 	private String login;
 
+	/**
+	 * Senha do usuário
+	 */
+	@Column(nullable = false)
 	private String password;
-
+	
+	/**
+	 * Funçao do usuário.
+	 * Na primeira versão deste sistema, vamos considerar somente a função USER
+	 */
 	private String role;
 
+	
+	
 	public User() {
 
 	}
 
+	
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param password
+	 * @param role
+	 */
 	public User(Long id, String name, String password, String role) {
 		this.id = id;
 		this.name = name;
@@ -33,44 +73,96 @@ public class User {
 		this.role = role;
 	}
 
+	
+	
+
+	/**
+	 * @return the id
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @param name the name to set
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
+	/**
+	 * @return the login
+	 */
 	public String getLogin() {
 		return login;
 	}
 
+	/**
+	 * @param login the login to set
+	 */
 	public void setLogin(String login) {
 		this.login = login;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	
+	/**
+	 * Valida antes de salvar
+	 * @throws Exception
+	 */
+	public void validate () throws Exception {
+		if (StringUtils.isEmpty(login)){
+			throw new Exception ("login em branco");
+		}
+		
+		if (StringUtils.isEmpty(name)){
+			throw new Exception ("Nome em branco");
+		}
+		
+		if (StringUtils.isEmpty(password)){
+			throw new Exception ("Senha em branco");
+		}
 	}
 
 	@Override

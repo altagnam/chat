@@ -15,8 +15,7 @@ import br.mg.gnam.chat.service.UserService;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * <p>Controller responsável pela manipulação de dados dos usuários.</p>
- * 
+ * <p>Controller responsável pela manipulação de dados dos usuários.</p> 
  * @author rafael.altagnam
  * @since 07/02/2019
  * @version 1.0

@@ -14,80 +14,133 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * <p>Entidade responsável por armazenar as mensagens enviadas pelo sistema.</p> 
+ * @author rafael.altagnam
+ * @since 07/02/2019
+ * @version 1.0
+ */
 @Entity
 @Table(name = "MESSAGE")
 public class Message {
 	
 
+	/**
+	 * ID da entidade
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long id;	
 	
+	/**
+	 * Quem enviou a mensagem.
+	 */
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "USER_FROM")
 	private User from;
 	
-	
+	/**
+	 * Para quem a mensagem foi enviada.
+	 */
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "USER_TO")
 	private User to;
 	
-	
+	/**
+	 * Conteudo da mensagem.
+	 */
 	@Column(name = "TEXT")
 	private String text;
 	
-	
+	/**
+	 * Data e hora quando a mensagem foi enviada.
+	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE")
 	private Date date;
 
 	
 
+	public Message() {
+	
+	}
+
+
+	/**
+	 * @return the id
+	 */
 	public Long getId() {
 		return id;
 	}
 
 
+	/**
+	 * @param id the id to set
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
 
+	/**
+	 * @return the from
+	 */
 	public User getFrom() {
 		return from;
 	}
 
 
+	/**
+	 * @param from the from to set
+	 */
 	public void setFrom(User from) {
 		this.from = from;
 	}
 
 
+	/**
+	 * @return the to
+	 */
 	public User getTo() {
 		return to;
 	}
 
 
+	/**
+	 * @param to the to to set
+	 */
 	public void setTo(User to) {
 		this.to = to;
 	}
 
 
+	/**
+	 * @return the text
+	 */
 	public String getText() {
 		return text;
 	}
 
 
+	/**
+	 * @param text the text to set
+	 */
 	public void setText(String text) {
 		this.text = text;
 	}
 
 
+	/**
+	 * @return the date
+	 */
 	public Date getDate() {
 		return date;
 	}
 
 
+	/**
+	 * @param date the date to set
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
@@ -148,8 +201,4 @@ public class Message {
 			return false;
 		return true;
 	}
-	
-	
-	
-
 }

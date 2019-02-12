@@ -14,14 +14,28 @@ import org.springframework.stereotype.Service;
 import br.mg.gnam.chat.model.User;
 import br.mg.gnam.chat.repository.UserRepository;
 
+/**
+ * <p>Service responsável por permitir validar um usuário e senha de usuários com informações 
+ * cadastradas no banco de dado.</p> 
+ * @author rafael.altagnam
+ * @since 06/02/2019
+ * @version 1.0
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+	/**
+	 * Repositorio do usuario. 
+	 * Mantem os dados
+	 */
 	@Autowired
 	private UserRepository userRepository;
 
 
-
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 		User user = userRepository.findByLogin(login);
@@ -38,6 +52,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				accountNonLocked, getAuthorities(user.getRole()));
 	}
 
+	/**
+	 * Retorna as ROLES do usuário.
+	 * @param role
+	 * @return
+	 */
 	private static List<GrantedAuthority> getAuthorities(String role) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(role));

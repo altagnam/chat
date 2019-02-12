@@ -1,7 +1,6 @@
 package br.mg.gnam.chat.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,51 +10,66 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import br.mg.gnam.chat.service.UserDetailsServiceImpl;
 
+/**
+ * <p>Classe de configuração para habilitar Spring security.</p>
+ * 
+ * @author rafael.altagnam
+ * @since 06/02/2019
+ * @version 1.0
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	/**
+	 * Service utilizado para autenticar o usuário com o login e senha
+	 * informados de acordo com as informações salvas no banco de dados.
+	 */
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
 
+	/**
+	 * Bean responsável pela criptografia da senha
+	 * @return
+	 */
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
 
-
-	@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+	/**
+	 * Bean utilizado para autenticar o usuário com o o login e senha
+	 * informada através do método <code>autologin</code>, da classe {@link SecurityServiceImpl}
+	 * @see SecurityServiceImpl
+	 */	
 	@Override
+	@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
 
-	@Bean
-	public SessionRegistry sessionRegistry() {
-		return new SessionRegistryImpl();
-	}
-
-	@Bean
-	public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
-		return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
-	}
-
+	/**
+	 * Bean responsável por permitir autenticar o usuário com o o login e senha
+	 * informado atraves da página de login. 
+	 * @param auth
+	 * @throws Exception
+	 */
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
 
+	/**
+	 * Configura as permissões do sistema.
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
+		http.sessionManagement().maximumSessions(1);
 		http.csrf().disable();
 		http.authorizeRequests()
 				.antMatchers("/cadastro.html", "/main.js").permitAll()

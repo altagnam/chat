@@ -1,6 +1,9 @@
 var stompClient = null;
 
-
+/**
+ * Recupera todos os usuários cadastrados
+ * @returns
+ */
 function getAllUser (){
 	var xmlHttp = new XMLHttpRequest();
 	xmlHttp.onreadystatechange = function() { 
@@ -16,6 +19,10 @@ function getAllUser (){
 }
 
 
+/**
+ * Recupera informações do usuário logado
+ * @returns
+ */
 function getInfoUserSelf(){
 	var xmlHttp = new XMLHttpRequest();
 	xmlHttp.onreadystatechange = function() { 
@@ -30,7 +37,11 @@ function getInfoUserSelf(){
 } 
 
 
-
+/**
+ * Inicia a conversa com um usuário
+ * @param row
+ * @returns
+ */
 function startTalk (row){
 	var table = row.parentElement;
 	for (var i = 0; i < table.childElementCount; i++){
@@ -43,10 +54,19 @@ function startTalk (row){
 	document.getElementById('user_talk_login').value = login;
 	document.getElementById('user_talk_name').value = name;
 	row.className = 'table-active';
-	 $("#send").prop("disabled", false);
+	if (stompClient.connected){
+		$("#send").prop("disabled", false);
+	}else{
+		alert('Você não esta conectado');
+	}
 }
 
 
+/**
+ *  Indica se o usuário esta conectado ao websocket 
+ * @param connected
+ * @returns
+ */
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -59,13 +79,19 @@ function setConnected(connected) {
     $("#greetings").html("");
 }
 
+
+/**
+ * Conecta o usuário ao websocket
+ * @returns
+ */
 function connect() {
     var socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
+    $("#send").prop("disabled", false);
     stompClient.connect({}, function (frame) {
     	setConnected(true);
         stompClient.subscribe('/user/queue/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body));
+            showMessage(JSON.parse(greeting.body));
         });
         
         stompClient.subscribe('/topic/greetings', function (greeting) {
@@ -75,17 +101,28 @@ function connect() {
 }
 
 
+/**
+ * Desconecta o usuário do websocket
+ * @returns
+ */
 function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
+        $("#send").prop("disabled", true);
     }
     setConnected(false);
-    console.log("Disconnected");
+    document.getElementById('send').disabled;
 }
 
 
+/**
+ * Envia a mensagem para o destinatário 
+ * @returns
+ */
 function sendMessage() {
     stompClient.send("/app/message", {}, JSON.stringify({
+    		'from':   document.getElementById("my_user_talk_login").value,
+    		'fromName':   document.getElementById("my_user_talk_name").innerText, 
     		'to':   document.getElementById("user_talk_login").value,
     		'toName':   document.getElementById("user_talk_name").value, 
     		'text': document.getElementById("message").value
@@ -94,11 +131,22 @@ function sendMessage() {
     document.getElementById("message").value = '';
 }
 
+
+/**
+ * Verifica se um determinado número é menor do que 10.
+ * @param number
+ * @returns
+ */
 function isLessTen (number){
 	return number < 10 ? true : false;
 }
 
 
+/**
+ * Formata uma data para o padrao dd/mm/yyyy hh:mm
+ * @param date
+ * @returns
+ */
 function formatterDate (date){
 	 var datePattern = isLessTen(date.getDate()) ? '0' + date.getDate() : date.getDate();
 	 datePattern += '/';
@@ -111,74 +159,89 @@ function formatterDate (date){
 	 return datePattern;
 }
 
-function showGreeting(message) {
+
+/**
+ * Adiciona uma nova linha a tabela de mensagem.
+ * Pode ser uma texto enviado pelo usuário como também o status
+ * @param message
+ * @param isStatus
+ * @returns
+ */
+function addRowMessage (message, isStatus){
 	var table = document.getElementById('greetings');
 	var tr = document.createElement("TR");
-	var td = document.createElement("TD");
+	var td = document.createElement("TD");	
+	var span =  document.createElement("SPAN");	
 	
-	var p =  document.createElement("P");
-	var span =  document.createElement("SPAN");
-	
-	p.className  = 'font-weight-bold';
-	p.style.fontSize = 'small';
-	
-	var date = new Date(message.date);
-	p.innerText = formatterDate(date);
-	
-	if (message.from != document.getElementById('my_user_talk_login').value){
-		p.innerText +=  ' ' + message.fromName + ' diz:';		
-	}else{
-		p.innerText += ' - Mensagem para ' + message.toName;	
-	}//
-	
-	span.innerText =  message.text;
-	if (message.from != document.getElementById('my_user_talk_login').value){
-		span.style.float = 'right';
+	if (!isStatus){			
+		span.innerText =  message.text;
+		if (message.from != document.getElementById('my_user_talk_login').value){
+			span.style.float = 'right';
+		}		
 	}
-	td.appendChild(p);
-	td.appendChild(span);
 	
+	td.appendChild(crateMessage(message, isStatus));
+	if (!isStatus){
+		td.appendChild(span);
+	}
 	tr.appendChild(td);
 	table.appendChild(tr);
 	table.scrollIntoView(false);
 	table.scrollIntoView({block: "end"});
 	table.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+	
 }
 
 
-function updateStatusUsers(message){
-	var table = document.getElementById('greetings');
-	var tr = document.createElement("TR");
-	var td = document.createElement("TD");
-	
+/**
+ * Cria a mensagem que será adicionada a tabela
+ * @param message
+ * @param isStatus
+ * @returns
+ */
+function crateMessage (message, isStatus){
 	var p =  document.createElement("P");
-	var span =  document.createElement("SPAN");
-	
 	p.classList.add('font-weight-bold');
-	if (message.status == 0){
-		p.classList.add('text-success');
+	p.style.fontSize = 'small';
+	if (!isStatus){
+		var date = new Date(message.date);
+		p.innerText = formatterDate(date);		
+		if (message.from != document.getElementById('my_user_talk_login').value){
+			p.innerText +=  ' ' + message.fromName + ' diz:';		
+		}else{
+			p.innerText += ' - Mensagem para ' + message.toName;	
+		}
 	}else{
-		p.classList.add('text-danger');
+		if (message.status == 0){
+			p.classList.add('text-success');
+		}else{
+			p.classList.add('text-danger');
+		}
+		p.style.textAlign = 'center';	
+		p.innerText = message.text;	
 	}
 	
-	p.style.fontSize = 'small';
-	p.style.textAlign = 'center';	
-	p.innerText = message.text;	
-	
-	td.appendChild(p);
-	td.appendChild(span);
-	
-	tr.appendChild(td);
-	table.appendChild(tr);
-	table.scrollIntoView(false);
-	table.scrollIntoView({block: "end"});
-	table.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+	return p;
 }
 
-
-function showMessagesNotRead(message){
-	$("#greetings").append("<tr><td>" + message.text + "<span></span></td></tr>");
+/**
+ * Exibe as mensagens recebidas para o usuário
+ * @param message
+ * @returns
+ */
+function showMessage(message) {
+	addRowMessage(message, false);
 }
+
+/**
+ * Exibe os status dos usuários para o usuário
+ * @param message
+ * @returns
+ */
+function updateStatusUsers(message){
+	addRowMessage(message, true);
+}
+
 
 $(function () {
     $("form").on('submit', function (e) {
