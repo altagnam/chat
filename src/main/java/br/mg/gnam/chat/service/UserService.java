@@ -2,6 +2,8 @@ package br.mg.gnam.chat.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -75,8 +77,7 @@ public class UserService {
 	 * @throws Exception 
 	 */
 	public User save(User user) throws Exception {
-		user.validate();
-		
+		user.validate();		
 		if (porLogin(user.getLogin()) != null) {
 			throw new Exception("Login já cadastrado. Informe um login diferente.");
 		}

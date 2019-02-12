@@ -1,5 +1,8 @@
 package br.mg.gnam.chat.model;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -173,8 +176,22 @@ public class User {
 	 * @throws Exception
 	 */
 	public void validate () throws Exception {
+		Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(getLogin());
+		if (m.find()) {
+			throw new Exception ("Digite um login sem caracter especial. Exemplo: u123456");
+		}
+		
 		if (StringUtils.isEmpty(login)){
-			throw new Exception ("login em branco");
+			throw new Exception ("Login em branco");
+		}
+		
+		if (getLogin().length() > 20){
+			throw new Exception ("Login com mais de 20 caracteres.");
+		}
+		
+		if (!Character.isLetter(getLogin().charAt(0))){
+			throw new Exception ("O primeiro caracter do login, deve ser uma letra. Exemplo: u123456");
 		}
 		
 		if (StringUtils.isEmpty(name)){
