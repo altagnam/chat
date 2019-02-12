@@ -1,3 +1,7 @@
+var	protocol = window.location.protocol;
+var	path = window.location.host;
+var	url = protocol + '//' + path;
+
 function createUSer() {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -16,7 +20,8 @@ function createUSer() {
 			
 		}
 	};
-	xhttp.open("POST", "http://localhost:8080/user", true);
+	
+	xhttp.open("POST", url + "/user", true);
 	xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send(JSON.stringify({
 	    'login': document.getElementById("login").value, 
@@ -28,9 +33,8 @@ function createUSer() {
 }
 
 
-function loginErro(){
-	var url = window.location.href;
-	if (url.includes('erro')){
+function init(){	
+	if (window.location.href.includes('erro')){
 		var div = document.getElementById('msg-login');
 		div.innerText = 'Usuário ou senha inválidos.';
 		div.className = 'alert alert-danger';

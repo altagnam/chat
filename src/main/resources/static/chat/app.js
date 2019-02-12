@@ -1,4 +1,7 @@
 var stompClient = null;
+var	protocol = window.location.protocol;
+var	path = window.location.host;
+var	url = protocol + '//' + path;
 
 /**
  * Recupera todos os usuários cadastrados
@@ -14,7 +17,7 @@ function getAllUser (){
 		   $("#table_users").append('<tr style=\'cursor: pointer;\' onclick=\'startTalk(this)\'><td id=' + user.login + '>' + user.name + '<span style=\'float: right;\'></span><span style=\'float: right;  width: 20px; text-align: center;\'></span></td></tr>');
 		}
 	}
-	xmlHttp.open("GET", 'http://localhost:8080/user/all', true); // true for asynchronous 
+	xmlHttp.open("GET", url + '/user/all', true); // true for asynchronous 
 	xmlHttp.send(null);
 }
 
@@ -32,7 +35,7 @@ function getInfoUserSelf(){
 		$("#my_user_talk_login").val(json.login);
 		}
 	}
-	xmlHttp.open("GET", 'http://localhost:8080/user/self', true); //
+	xmlHttp.open("GET", url + '/user/self', true); //
 	xmlHttp.send(null);
 } 
 
