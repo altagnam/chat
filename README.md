@@ -20,13 +20,10 @@ http://localhost:8080/login
 
 <br />
 <h1>Integração com HEROKU</h1>
-Acesse a pasta do projeto e digite:
-<code>cd src/main/resources/static</code>
+Abra o navegador e digite: https://chat-hotmart.herokuapp.com/
 
-Edite o arquivo login.html e insira uma mensagem de boas vindas.
-
-Abra o navegador e digite:
-https://chat-hotmart.herokuapp.com/
+Para toda alteração realizada no github é realizado 
+o deploy automático da aplicação.
 
 
 
