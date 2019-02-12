@@ -32,7 +32,7 @@ function getAllUser (){
 		   var user = json[k];
 		   var row = '<tr style=\'cursor: pointer;\' onclick=\'startTalk(this)\'>';
 		   row += '<td id=' + user.login + '>';
-		   row += user.name;
+		   row +=  '<span>' + user.name + '</span>';
 		   if (user.status == 1){
 			   row += '<span class=\'text-success\' style=\'float: right; text-align: center;\'>on</span>';
 		   }else{
@@ -77,7 +77,7 @@ function startTalk (row){
 	}
 	
 	var td = row.children[0];
-	var name = td.innerText;
+	var name = td.children[0].innerText;
 	var login = td.id;
 	document.getElementById('user_talk_login').value = login;
 	document.getElementById('user_talk_name').value = name;
@@ -271,11 +271,11 @@ function updateStatusUsers(message){
 	var rowUser = document.getElementById(message.login);
 	
 	if (message.status == 0){
-		rowUser.children[0].innerText = 'on';
-		rowUser.children[0].className = 'text-success';
+		rowUser.children[1].innerText = 'on';
+		rowUser.children[1].className = 'text-success';
 	}else{
-		rowUser.children[0].innerText = 'off';
-		rowUser.children[0].className = 'text-danger';
+		rowUser.children[1].innerText = 'off';
+		rowUser.children[1].className = 'text-danger';
 	}
 }
 
