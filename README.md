@@ -8,7 +8,7 @@ Faça o download do projeto:
 Acesse a pasta do projeto:
 <code>cd chat</code>
 
-Excute o arquivo <code>script.sql</code> disponível em "chat/src/main/resources" para criar o schema e as tabelas. 
+Abra um cliente do banco MySql e execute o arquivo <code>script.sql</code> disponível em "chat/src/main/resources" para criar o schema e as tabelas. 
 
 Execute o comando:
 <code>mvn clean install</code>
