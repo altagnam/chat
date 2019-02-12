@@ -113,7 +113,11 @@ public class UserService {
 	 */
 	public List<User> todosMenos(String login) {
 		User user = userRepository.findByLogin(login);
-		return userRepository.findAllLess(user);
+		List<User> users = userRepository.findAllLess(user);
+		users.forEach(u ->{
+			u.setStatus(isUserOnWebSocket(u.getLogin()));
+		});
+		return users;
 	}
 
 	/**

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.util.StringUtils;
@@ -52,6 +53,11 @@ public class User {
 	 */
 	private String role;
 
+	/**
+	 * Verifica se o usuario esta conectado no websocket
+	 */
+	@Transient
+	private boolean status;
 	
 	
 	public User() {
@@ -144,9 +150,24 @@ public class User {
 	 */
 	public void setRole(String role) {
 		this.role = role;
+	}	
+
+
+	/**
+	 * @return the status
+	 */
+	public boolean isStatus() {
+		return status;
 	}
-	
-	
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+
 	/**
 	 * Valida antes de salvar
 	 * @throws Exception

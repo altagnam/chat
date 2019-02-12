@@ -67,7 +67,7 @@ public class WebSocketEventListener {
 		/*
 		 * Alertando os demais usuários que um usuário acabou de conectar ao chat
 		 */
-		simpMessagingTemplate.convertAndSend("/topic/greetings", "{\"text\": " + "\"" + user.getName() + " entrou." + "\"" + ", \"status\": 0}");
+		simpMessagingTemplate.convertAndSend("/topic/greetings", "{\"login\": \"" + user.getLogin()+ "\", \"text\": " + "\"" + user.getName() + " entrou." + "\"" + ", \"status\": 0}");
 
 		
 		/*
@@ -109,6 +109,6 @@ public class WebSocketEventListener {
 		/*
 		 * Notifica aos demais usuários que o usuário esta offline 
 		 */
-		simpMessagingTemplate.convertAndSend("/topic/greetings", "{\"text\": " + "\"" + user.getName() + " saiu." +  "\"" + ", \"status\": 1}");
+		simpMessagingTemplate.convertAndSend("/topic/greetings", "{\"login\": \"" + user.getLogin() + "\", \"text\": " + "\"" + user.getName() + " saiu." +  "\"" + ", \"status\": 1}");
 	}
 }

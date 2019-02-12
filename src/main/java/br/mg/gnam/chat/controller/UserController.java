@@ -73,6 +73,8 @@ public class UserController {
 		users.forEach(user ->{
 			user.setPassword(null);
 		});
+		
+		
 		return users;
 	}
 
